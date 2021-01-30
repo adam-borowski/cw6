@@ -12,12 +12,13 @@ namespace Cw6.Services {
         public Student GetStudent(string indexNumber) {
             using(var connection = new SqlConnection(CONNECTION_STRING))
             using(var command = new SqlCommand()) {
-                command.CommandText = "SELECT IdStudent, FirstName, LastName, IndexNumber, BirthDate FROM Student s WHERE s.IndexNumber = @indexnumber";
+                command.Connection = connection;
+                connection.Open();
+                command.CommandText = "SELECT FirstName, LastName, IndexNumber, BirthDate FROM Student s WHERE s.IndexNumber = @indexnumber";
                 command.Parameters.AddWithValue("indexnumber", indexNumber);
                 var reader = command.ExecuteReader();
                 if(reader.Read()) {
-                    return new Student { 
-                        IdStudent = Int32.Parse(reader["IdStudent"].ToString()),
+                    return new Student {
                         FirstName = reader["FirstName"].ToString(),
                         LastName = reader["LastName"].ToString(),
                         IndexNumber = reader["IndexNumber"].ToString(),

@@ -1,4 +1,5 @@
 using Cw6.Services;
+using Cw6.Middlewares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Cw6
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SqlServerStudentDbService service)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStudentDbService service)
         {
             if (env.IsDevelopment())
             {
@@ -40,6 +41,8 @@ namespace Cw6
             }
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<LoggingMiddleware>();
 
             app.Use(async (context, next) => {
                 if(!context.Request.Headers.ContainsKey("Index")) {
